@@ -1,0 +1,44 @@
+# --- Build (C++) ---
+build/
+out/
+cmake-build-*/
+CMakeUserPresets.json
+*.obj
+*.o
+*.pdb
+*.ilk
+*.exe
+*.dll
+*.lib
+*.exp
+
+# --- Visual Studio / VS Code ---
+.vs/
+.vscode/
+*.vcxproj*
+*.sln
+
+# --- Android / Gradle ---
+.gradle/
+android/local.properties
+android/.idea/
+*.iml
+android/app/build/
+android/build/
+android/.cxx/
+android/captures/
+*.apk
+*.aab
+*.keystore
+!debug.keystore
+keystore.properties
+
+# --- Sistema ---
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# --- Secretos y temporales ---
+.env
+*.log
+*.tmp
