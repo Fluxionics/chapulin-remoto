@@ -1,0 +1,32 @@
+#pragma code_page(65001)
+#include "resource.h"
+
+#define CREATEPROCESS_MANIFEST_RESOURCE_ID 1
+#define RT_MANIFEST 24
+CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "chapulin.manifest"
+
+// Estilos en hexadecimal para no depender de windows.h en rc.exe:
+//   DS_SETFONT 0x40 | DS_CENTER 0x4000 | WS_POPUP 0x80000000 | WS_CAPTION 0xC00000
+//   | WS_SYSMENU 0x80000 | WS_MINIMIZEBOX 0x20000  =>  0x80CA4040
+CAPTION_CHAPULIN DIALOGEX 0, 0, 372, 236
+STYLE 0x80CA4040
+EXSTYLE 0x00040000
+FONT 9, "Segoe UI", 0, 0, 0x1
+BEGIN
+    GROUPBOX        "Conexión", IDC_GB_CONN, 12, 34, 348, 84
+    LTEXT           "Dirección IP:", -1, 26, 54, 74, 10, 2
+    LTEXT           "-", IDC_IP_LIST, 106, 54, 196, 10
+    PUSHBUTTON      "Copiar", IDC_COPY_IP, 306, 52, 44, 14
+    LTEXT           "Puerto:", -1, 26, 74, 74, 10, 2
+    LTEXT           "47474", IDC_PORT, 106, 74, 80, 10
+    LTEXT           "PIN:", -1, 26, 94, 74, 10, 2
+    LTEXT           "------", IDC_PIN_VAL, 106, 92, 120, 14
+    PUSHBUTTON      "Copiar", IDC_COPY_PIN, 306, 92, 44, 14
+
+    GROUPBOX        "Estado", IDC_GB_STATE, 12, 124, 348, 52
+    LTEXT           "Esperando conexiones...", IDC_STATUS, 26, 142, 320, 10
+    LTEXT           "Ningún cliente conectado", IDC_CLIENT, 26, 158, 320, 10
+
+    LTEXT           "Usa estos datos en la app Chapulín Remoto de tu celular", IDC_HINT, 26, 190, 258, 10
+    DEFPUSHBUTTON   "Salir", IDC_EXIT, 292, 186, 68, 18
+END

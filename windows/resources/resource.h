@@ -1,0 +1,16 @@
+#pragma once
+
+#define IDI_ICON1 101
+#define CAPTION_CHAPULIN 102
+
+#define IDC_IP_LIST 1001
+#define IDC_PORT 1002
+#define IDC_PIN_VAL 1003
+#define IDC_STATUS 1004
+#define IDC_CLIENT 1005
+#define IDC_COPY_IP 1006
+#define IDC_COPY_PIN 1007
+#define IDC_EXIT 1008
+#define IDC_GB_CONN 1009
+#define IDC_GB_STATE 1010
+#define IDC_HINT 1011

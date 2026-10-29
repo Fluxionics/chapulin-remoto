@@ -34,7 +34,7 @@ Todos los paquetes empiezan igual. Enteros en **little-endian**.
 | 0x07 | `PING` | ambos | `u32` timestamp ms |
 | 0x08 | `PONG` | ambos | eco del timestamp |
 | 0x09 | `DISCONNECT` | ambos | `u8` motivo |
-| 0x0A | `SET_QUALITY` | cliente → host | `Quality` |
+| 0x0A | `SET_QUALITY` | cliente → host | `Quality` (4 bytes: ancho máx. u16, calidad u8, fps u8) |
 
 > Regla de compatibilidad: un receptor debe **ignorar** tipos desconocidos
 > (leer y descartar el payload) en lugar de cerrar la conexión.
@@ -60,8 +60,8 @@ struct HandshakeAck {
     uint32_t screen_h;
     uint8_t  monitor_count;
     uint8_t  auth_required; // 1 = PIN obligatorio
-    uint8_t  reserved[6];
     uint8_t  host_name_len; // seguido de UTF-8 con el nombre del PC
+    uint8_t  reserved[9];
 };
 ```
 
@@ -110,7 +110,7 @@ enum InputKind : uint8_t {
     CHAR       = 6,   // texto Unicode para IME
 };
 
-// INPUT payload (12 bytes)
+// INPUT payload (14 bytes)
 struct InputEvent {
     uint8_t  kind;
     uint8_t  button;    // 0=izq, 1=der, 2=medio
