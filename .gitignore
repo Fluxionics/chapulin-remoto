@@ -42,3 +42,9 @@ Desktop.ini
 .env
 *.log
 *.tmp
+
+# --- Clave de firma local (auto-firmada): NUNCA se comparte ---
+certs/
+dist/
+*.pfx
+*.pfx.password

@@ -9,10 +9,18 @@
     <UseWindowsForms>true</UseWindowsForms>
     <AssemblyName>chapulin-host</AssemblyName>
     <ApplicationIcon>..\windows\resources\logo.ico</ApplicationIcon>
-    <Version>0.1.1</Version>
-    <AssemblyVersion>0.1.1.0</AssemblyVersion>
-    <FileVersion>0.1.1.0</FileVersion>
-    <InformationalVersion>0.1.1</InformationalVersion>
+    <Version>0.1.2</Version>
+    <AssemblyVersion>0.1.2.0</AssemblyVersion>
+    <FileVersion>0.1.2.0</FileVersion>
+    <InformationalVersion>0.1.2</InformationalVersion>
+  </PropertyGroup>
+
+  <!-- Si se publica con RID (dotnet publish -r win-x64), sale autocontenido:
+       el .exe arranca en cualquier PC sin tener .NET 8 instalado. -->
+  <PropertyGroup Condition="'$(RuntimeIdentifier)' != ''">
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
   </PropertyGroup>
 
 </Project>

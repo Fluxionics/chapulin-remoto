@@ -51,4 +51,7 @@ Si quieres probar el control, el cliente Android envía los eventos de input.
 - Ejecuta la consola **como administrador** si necesitas controlar ventanas
   elevadas (UAC): Windows bloquea `SendInput` hacia procesos de mayor integridad.
 - El primer arranque puede disparar un aviso del SmartScreen/Defender porque el
-  binario no está firmado. Es esperado en esta fase.
+  binario no está firmado. Es esperado en esta fase. Para eliminarlo en local:
+  `.\tools\build-release.ps1 -TrustCert` (crea la clave, publica autocontenido
+  en `dist\` y firma todos los `.exe`; `-TrustCert` una vez como admin para
+  que Windows confíe en el cert).
