@@ -1,32 +1,57 @@
 #pragma code_page(65001)
+#include <windows.h>
 #include "resource.h"
 
 #define CREATEPROCESS_MANIFEST_RESOURCE_ID 1
 #define RT_MANIFEST 24
 CREATEPROCESS_MANIFEST_RESOURCE_ID RT_MANIFEST "chapulin.manifest"
+IDI_ICON1 ICON "logo.ico"
 
-// Estilos en hexadecimal para no depender de windows.h en rc.exe:
-//   DS_SETFONT 0x40 | DS_CENTER 0x4000 | WS_POPUP 0x80000000 | WS_CAPTION 0xC00000
-//   | WS_SYSMENU 0x80000 | WS_MINIMIZEBOX 0x20000  =>  0x80CA4040
-CAPTION_CHAPULIN DIALOGEX 0, 0, 372, 236
-STYLE 0x80CA4040
-EXSTYLE 0x00040000
+CAPTION_CHAPULIN DIALOGEX 0, 0, 480, 440
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX
+CAPTION "Chapulín Remoto"
 FONT 9, "Segoe UI", 0, 0, 0x1
 BEGIN
-    GROUPBOX        "Conexión", IDC_GB_CONN, 12, 34, 348, 84
-    LTEXT           "Dirección IP:", -1, 26, 54, 74, 10, 2
-    LTEXT           "-", IDC_IP_LIST, 106, 54, 196, 10
-    PUSHBUTTON      "Copiar", IDC_COPY_IP, 306, 52, 44, 14
-    LTEXT           "Puerto:", -1, 26, 74, 74, 10, 2
-    LTEXT           "47474", IDC_PORT, 106, 74, 80, 10
-    LTEXT           "PIN:", -1, 26, 94, 74, 10, 2
-    LTEXT           "------", IDC_PIN_VAL, 106, 92, 120, 14
-    PUSHBUTTON      "Copiar", IDC_COPY_PIN, 306, 92, 44, 14
+    GROUPBOX        "Compartir Pantalla de esta PC", IDC_GB_CONN, 14, 52, 452, 92
+    LTEXT           "Ingresa estos datos en la app Chapulín Remoto en tu celular:", -1, 26, 68, 428, 10
+    
+    LTEXT           "IP de la PC:", -1, 26, 86, 50, 10
+    LTEXT           "-", IDC_IP_LIST, 80, 86, 300, 10
+    PUSHBUTTON      "Copiar", IDC_COPY_IP, 396, 82, 58, 18, BS_OWNERDRAW
+    
+    LTEXT           "Puerto:", -1, 26, 106, 35, 10
+    LTEXT           "47474", IDC_PORT, 64, 106, 45, 10
+    
+    LTEXT           "PIN de la PC:", -1, 130, 106, 55, 10
+    LTEXT           "------", IDC_PIN_VAL, 190, 106, 60, 10
+    PUSHBUTTON      "Copiar PIN", IDC_COPY_PIN, 396, 102, 58, 18, BS_OWNERDRAW
+    
+    LTEXT           "El PIN cambia en cada sesión para mayor seguridad.", -1, 26, 126, 428, 10
 
-    GROUPBOX        "Estado", IDC_GB_STATE, 12, 124, 348, 52
-    LTEXT           "Esperando conexiones...", IDC_STATUS, 26, 142, 320, 10
-    LTEXT           "Ningún cliente conectado", IDC_CLIENT, 26, 158, 320, 10
+    GROUPBOX        "Controlar Celular Remoto", IDC_GB_PHONE, 14, 154, 452, 122
+    LTEXT           "Abre Chapulín Remoto en tu celular y escribe los datos que aparecen allí:", -1, 26, 170, 428, 10
+    
+    LTEXT           "IP Celular:", -1, 26, 190, 45, 10
+    EDITTEXT        IDC_PHONE_IP, 74, 187, 130, 15, ES_AUTOHSCROLL
+    
+    LTEXT           "Puerto:", -1, 214, 190, 32, 10
+    EDITTEXT        IDC_PHONE_PORT, 248, 187, 48, 15, ES_AUTOHSCROLL | ES_NUMBER
+    
+    LTEXT           "PIN:", -1, 308, 190, 20, 10
+    EDITTEXT        IDC_PHONE_PIN, 332, 187, 56, 15, ES_AUTOHSCROLL
+    
+    PUSHBUTTON      "Conectar al Celular", IDC_CONNECT_PHONE, 130, 214, 220, 24, BS_OWNERDRAW
+    
+    LTEXT           "Al conectar, se abrirá la pantalla del celular para verla y controlarla.", IDC_HINT, 26, 252, 428, 10
 
-    LTEXT           "Usa estos datos en la app Chapulín Remoto de tu celular", IDC_HINT, 26, 190, 258, 10
-    DEFPUSHBUTTON   "Salir", IDC_EXIT, 292, 186, 68, 18
+    GROUPBOX        "Estado de la Red y Conexiones", IDC_GB_STATE, 14, 286, 452, 92
+    LTEXT           "Servidor PC:", -1, 26, 302, 55, 10
+    LTEXT           "Esperando conexiones...", IDC_STATUS, 85, 302, 365, 10
+    
+    LTEXT           "Celular:", -1, 26, 322, 55, 10
+    LTEXT           "Ningún cliente conectado", IDC_CLIENT, 85, 322, 365, 10
+    
+    LTEXT           "Ambos dispositivos deben estar conectados a la misma red Wi-Fi.", -1, 26, 350, 428, 10
+
+    DEFPUSHBUTTON   "Cerrar", IDC_EXIT, 396, 395, 70, 22, BS_OWNERDRAW
 END

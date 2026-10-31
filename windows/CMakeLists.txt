@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
 
-project(chapulin_remoto VERSION 0.1.0 LANGUAGES CXX)
+project(chapulin_remoto VERSION 0.1.1 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -28,13 +28,13 @@ set(HOST_SOURCES
     src/codec/wic_jpeg.cpp
     src/input/injector.cpp
     src/net/server.cpp
+    src/net/phone_client.cpp
     src/ui/host_ui.cpp
+    src/ui/phone_viewer.cpp
     resources/chapulin.rc
 )
 
 if(MSVC)
-    # /MANIFEST:NO evita que el linker incruste un manifiesto propio; el nuestro
-    # (comctl32 v6 + DPI) ya va dentro de resources/chapulin.rc con ID 1.
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS /MANIFEST:NO")
 endif()
 add_executable(chapulin-host WIN32 ${HOST_SOURCES})

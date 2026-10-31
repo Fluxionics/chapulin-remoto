@@ -3,11 +3,8 @@ package com.chapulin.remoto.net
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
-/**
- * Protocolo CHP/1. Ver docs/PROTOCOLO.md.
- */
 object Chp {
-    const val MAGIC = 0x4843          // "CH"
+    const val MAGIC = 0x4843
     const val VERSION = 1
     const val HEADER_SIZE = 12
     const val MAX_PAYLOAD = 8 * 1024 * 1024
@@ -32,7 +29,6 @@ object Chp {
     const val INPUT_CHAR = 6
 
     const val FLAG_EXTENDED = 0x0001
-
     const val CLIENT_ANDROID = 2
 
     fun packet(type: Int, seq: Int, payload: ByteArray): ByteArray {
@@ -48,12 +44,12 @@ object Chp {
 
     fun helloPayload(): ByteArray =
         ByteBuffer.allocate(16).order(ByteOrder.LITTLE_ENDIAN).apply {
-            putShort(1)             // proto_min
-            putShort(1)             // proto_max
+            putShort(1)
+            putShort(1)
             put(CLIENT_ANDROID.toByte())
-            put(byteArrayOf(1, 0, 0)) // caps: jpeg
-            putInt(0)               // screen_w (lo decide el host)
-            putInt(0)               // screen_h
+            put(byteArrayOf(1, 0, 0))
+            putInt(0)
+            putInt(0)
         }.array()
 
     fun inputPayload(

@@ -45,8 +45,12 @@ void wheel(int16_t delta) {
 void key(uint16_t scancode, bool down) {
     INPUT input{};
     input.type = INPUT_KEYBOARD;
-    input.ki.wScan = scancode;
-    input.ki.dwFlags = KEYEVENTF_SCANCODE | (down ? 0u : KEYEVENTF_KEYUP);
+    input.ki.wScan = scancode & 0x7FFF;
+    DWORD flags = KEYEVENTF_SCANCODE | (down ? 0u : KEYEVENTF_KEYUP);
+    if (scancode & 0x8000) {
+        flags |= KEYEVENTF_EXTENDEDKEY;
+    }
+    input.ki.dwFlags = flags;
     SendInput(1, &input, sizeof(INPUT));
 }
 

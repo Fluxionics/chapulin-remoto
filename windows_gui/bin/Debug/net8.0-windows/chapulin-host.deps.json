@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "chapulin-host/1.0.0": {
+        "runtime": {
+          "chapulin-host.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "chapulin-host/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

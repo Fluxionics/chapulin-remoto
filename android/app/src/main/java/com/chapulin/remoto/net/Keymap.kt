@@ -1,11 +1,7 @@
 package com.chapulin.remoto.net
 
-/**
- * Scancodes del set 1 (los que espera SendInput en Windows).
- * Ver windows/src/input/injector.cpp.
- */
 object Keymap {
-    const val EXTENDED = Chp.FLAG_EXTENDED
+    const val EXTENDED = 0x8000
 
     const val ESC = 0x01
     const val TAB = 0x0F
@@ -15,19 +11,29 @@ object Keymap {
     const val CTRL = 0x1D
     const val ALT = 0x38
     const val SHIFT = 0x2A
-    const val WIN = 0x5B
+    const val WIN = 0x5B or EXTENDED
 
-    const val LEFT = 0x4B
-    const val RIGHT = 0x4D
-    const val UP = 0x48
-    const val DOWN = 0x50
-    const val HOME = 0x47
-    const val END = 0x4F
-    const val PAGE_UP = 0x49
-    const val PAGE_DOWN = 0x51
-    const val DELETE = 0x53
+    const val LEFT = 0x4B or EXTENDED
+    const val RIGHT = 0x4D or EXTENDED
+    const val UP = 0x48 or EXTENDED
+    const val DOWN = 0x50 or EXTENDED
+    const val HOME = 0x47 or EXTENDED
+    const val END = 0x4F or EXTENDED
+    const val PAGE_UP = 0x49 or EXTENDED
+    const val PAGE_DOWN = 0x51 or EXTENDED
+    const val DELETE = 0x53 or EXTENDED
 
-    /** Scancode de una letra a-z o digito 0-9, o null si no esta mapeado. */
+    const val F1 = 0x3B; const val F2 = 0x3C; const val F3 = 0x3D; const val F4 = 0x3E
+    const val F5 = 0x3F; const val F6 = 0x40; const val F7 = 0x41; const val F8 = 0x42
+    const val F9 = 0x43; const val F10 = 0x44; const val F11 = 0x57; const val F12 = 0x58
+
+    const val VOL_MUTE = 0x20 or EXTENDED
+    const val VOL_DOWN = 0x2E or EXTENDED
+    const val VOL_UP = 0x30 or EXTENDED
+    const val MEDIA_NEXT = 0x19 or EXTENDED
+    const val MEDIA_PREV = 0x10 or EXTENDED
+    const val MEDIA_PLAY = 0x22 or EXTENDED
+
     fun forChar(c: Char): Int? {
         val lower = c.lowercaseChar()
         return when (lower) {
@@ -40,6 +46,9 @@ object Keymap {
             '1' -> 0x02; '2' -> 0x03; '3' -> 0x04; '4' -> 0x05; '5' -> 0x06
             '6' -> 0x07; '7' -> 0x08; '8' -> 0x09; '9' -> 0x0A; '0' -> 0x0B
             ' ' -> SPACE
+            '\n', '\r' -> ENTER
+            '\b' -> BACKSPACE
+            '\t' -> TAB
             else -> null
         }
     }

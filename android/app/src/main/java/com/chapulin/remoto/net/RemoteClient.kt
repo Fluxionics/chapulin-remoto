@@ -18,9 +18,6 @@ import kotlin.concurrent.thread
 
 data class HostTarget(val address: String, val port: Int, val pin: String)
 
-/**
- * Cliente CHP/1. [connect] bloquea: llamalo siempre desde Dispatchers.IO.
- */
 class RemoteClient {
 
     interface Listener {
@@ -34,8 +31,6 @@ class RemoteClient {
     private val writeLock = Any()
     private val sequence = AtomicInteger(1)
 
-    // Cola de salida: la UI solo encola, un hilo dedicado escribe en el socket.
-    // Sin esto, tocar la pantalla lanza NetworkOnMainThreadException.
     private val outbox = LinkedBlockingQueue<ByteArray>()
     private var writer: Thread? = null
 
@@ -52,7 +47,7 @@ class RemoteClient {
     fun connect(host: String, port: Int, pin: String, listener: Listener) {
         val tcp = Socket()
         tcp.tcpNoDelay = true
-        tcp.soTimeout = 15000
+        tcp.soTimeout = 10000
         tcp.connect(InetSocketAddress(host, port), 5000)
 
         socket = tcp
@@ -87,7 +82,7 @@ class RemoteClient {
         }
 
         connected = true
-        tcp.soTimeout = 0
+        tcp.soTimeout = 15000
         startWriter()
         listener.onConnected(hostName)
 
@@ -105,12 +100,16 @@ class RemoteClient {
                     .putInt(stamp).array()
                 sendPacket(Chp.T_PING, payload)
             }
-        } catch (ignored: InterruptedException) {
-        } catch (ignored: IOException) {
+        } catch (_: InterruptedException) {
+        } catch (_: IOException) {
         }
     }
 
     private fun readLoop(input: DataInputStream, listener: Listener) {
+        val decodeOptions = BitmapFactory.Options().apply {
+            inPreferredConfig = Bitmap.Config.RGB_565
+            inMutable = true
+        }
         try {
             while (!closed) {
                 val (type, payload) = readPacket(input)
@@ -118,7 +117,7 @@ class RemoteClient {
                     Chp.T_VIDEO_FRAME -> {
                         if (payload.size <= 12) continue
                         val bitmap =
-                            BitmapFactory.decodeByteArray(payload, 12, payload.size - 12)
+                            BitmapFactory.decodeByteArray(payload, 12, payload.size - 12, decodeOptions)
                         if (bitmap != null) listener.onFrame(bitmap)
                     }
 
@@ -153,7 +152,7 @@ class RemoteClient {
 
         val type = buffer.get().toInt() and 0xFF
         val length = buffer.int
-        buffer.int // seq
+        buffer.int
 
         if (length < 0 || length > Chp.MAX_PAYLOAD) {
             throw IOException("Paquete demasiado grande: $length")
@@ -175,8 +174,8 @@ class RemoteClient {
                         stream.flush()
                     }
                 }
-            } catch (ignored: InterruptedException) {
-            } catch (ignored: IOException) {
+            } catch (_: InterruptedException) {
+            } catch (_: IOException) {
                 if (!closed) close()
             }
         }
@@ -186,13 +185,10 @@ class RemoteClient {
         if (closed) return
         val bytes = Chp.packet(type, sequence.getAndIncrement(), payload)
 
-        // Si la cola se desborda (red lenta), tiramos lo mas viejo antes que
-        // bloquear la UI o comernos la memoria.
         if (outbox.size >= MAX_QUEUED_PACKETS) outbox.poll()
         outbox.offer(bytes)
     }
 
-    /** Escritura directa, solo para el handshake (ya corre en un hilo de IO). */
     private fun writeDirect(bytes: ByteArray) {
         val stream = output ?: return
         synchronized(writeLock) {
@@ -224,7 +220,9 @@ class RemoteClient {
 
     fun sendKey(scancode: Int, down: Boolean, flags: Int = 0) {
         val kind = if (down) Chp.INPUT_KEY_DOWN else Chp.INPUT_KEY_UP
-        sendPacket(Chp.T_INPUT, Chp.inputPayload(kind, 0, 0, 0, 0, scancode and 0xFFFF, flags))
+        val rawCode = scancode and 0x7FFF
+        val extFlag = if ((scancode and Keymap.EXTENDED) != 0) Chp.FLAG_EXTENDED else flags
+        sendPacket(Chp.T_INPUT, Chp.inputPayload(kind, 0, 0, 0, 0, rawCode, extFlag))
     }
 
     fun sendText(codeUnit: Int) {
@@ -243,7 +241,7 @@ class RemoteClient {
         writer?.interrupt()
         try {
             socket?.close()
-        } catch (ignored: IOException) {
+        } catch (_: IOException) {
         }
         socket = null
         output = null
